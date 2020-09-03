@@ -18,7 +18,7 @@ card:
 	image:
 	super type: <word-list-type>{card["type"]}</word-list-type>
 	sub type: <word-list-race></word-list-race>
-	rarity: rare
+	rarity: {card["rarity"]}
 	rule text:
 		{card["rule_text"]}		
 	flavor text: <i-flavor>{card["flavor_text"]}</i-flavor>"""
@@ -45,6 +45,7 @@ def gen_card(raw_info):
 		"name": raw_info.get("name"),
 		"cost": raw_info.get("manaCost", "").replace("{", "").replace("}", ""),
 		"type": raw_info.get("type"),
+		"rarity": raw_info.get("rarity").lower().replace("mythic", "mythic rare"),
 		"rule_text": raw_info.get("text", "").replace("\n", "\n\t\t").replace("{", "").replace("}", ""),
 		"flavor_text": raw_info.get("flavor") or "",
 		"power": raw_info.get("power"),
@@ -76,7 +77,7 @@ def gen_text(card_names):
 	full_text = ""
 	for card_name in card_names:
 		print(f"Getting info for {card_name}")
-		card_info = get_card_info(card_name)
+		card_info = get_card_info(card_name.strip())
 		full_text += templated_card(card_info)
 	return full_text
 
